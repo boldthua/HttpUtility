@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace HttpUtility
 {
-    internal class HttpRequest : IHttpRequest
+    public class HttpRequest : IHttpRequest
     {
         public HttpClient client = new HttpClient();
 
@@ -34,9 +34,10 @@ namespace HttpUtility
 
         public async Task<T> Get<T>(string url)
         {
+            string getUrl = ConbineUrl(url);
             try
             {
-                HttpResponseMessage message = await client.GetAsync(url);
+                HttpResponseMessage message = await client.GetAsync(getUrl);
                 if (message.IsSuccessStatusCode)
                 {
                     string content = await message.Content.ReadAsStringAsync();
@@ -52,9 +53,10 @@ namespace HttpUtility
         }
         public async Task<string> Delete(string url)
         {
+            string deleteUrl = ConbineUrl(url);
             try
             {
-                HttpResponseMessage message = await client.DeleteAsync(url);
+                HttpResponseMessage message = await client.DeleteAsync(deleteUrl);
                 if (message.IsSuccessStatusCode)
                 {
                     {
@@ -64,16 +66,19 @@ namespace HttpUtility
                 return "刪除失敗！！";
             }
             catch (Exception ex)
-            { return ex.ToString(); }
+            {
+                return ex.ToString();
+            }
         }
 
         public async Task<T> Post<T>(string url, object addContent)
         {
+            string postUrl = ConbineUrl(url);
             try
             {
 
                 StringContent stringContent = new StringContent(JsonConvert.SerializeObject(addContent));
-                HttpResponseMessage message = await client.PostAsync(url, stringContent);
+                HttpResponseMessage message = await client.PostAsync(postUrl, stringContent);
                 if (message.IsSuccessStatusCode)
                 {
                     string content = await message.Content.ReadAsStringAsync();
@@ -91,13 +96,15 @@ namespace HttpUtility
 
         public async Task<T> Patch<T>(string url, object patchContent)
         {
+            string patchUrl = ConbineUrl(url);
+
             try
             {
                 StringContent stringContent = new StringContent(JsonConvert.SerializeObject(patchContent));
                 HttpRequestMessage httpRequestMessage = new HttpRequestMessage();
                 httpRequestMessage.Method = new HttpMethod("Patch");
                 httpRequestMessage.Content = stringContent;
-                httpRequestMessage.RequestUri = new Uri(url);
+                httpRequestMessage.RequestUri = new Uri(patchUrl);
                 HttpResponseMessage message = await client.SendAsync(httpRequestMessage);
                 if (message.IsSuccessStatusCode)
                 {
@@ -115,10 +122,12 @@ namespace HttpUtility
         }
         public async Task<T> Put<T>(string url, object putContent)
         {
+            string putUrl = ConbineUrl(url);
+
             try
             {
                 StringContent stringContent = new StringContent(JsonConvert.SerializeObject(putContent));
-                HttpResponseMessage message = await client.PutAsync(url, stringContent);
+                HttpResponseMessage message = await client.PutAsync(putUrl, stringContent);
                 if (message.IsSuccessStatusCode)
                 {
                     string content = await message.Content.ReadAsStringAsync();
@@ -178,7 +187,7 @@ namespace HttpUtility
                 {
                     lastUrl = lastUrl + pairSet.Key + '=' + pairSet.Value + '&';
                 }
-                lastUrl.TrimEnd();
+                lastUrl = lastUrl.TrimEnd('&');
             }
 
             TResult content = await Post<TResult>(lastUrl, input);
@@ -265,10 +274,26 @@ namespace HttpUtility
             return result;
         }
 
-        public async Task<string> DeleteAsync(string url)
+        public async Task<string> DeleteAsync(string url, Dictionary<string, string> urlParam = null)
         {
-            string result = await Delete(url);
+            string lastUrl = url;
+            if (urlParam != null)
+            {
+                lastUrl += '?';
+                foreach (var pairSet in urlParam)
+                {
+                    lastUrl = lastUrl + pairSet.Key + '=' + pairSet.Value + '&';
+                }
+                lastUrl.TrimEnd();
+            }
+            string result = await Delete(lastUrl);
             return result;
+        }
+
+        private string ConbineUrl(string url)
+        {
+            string completeUrl = BaseUrl + url;
+            return completeUrl;
         }
     }
 }

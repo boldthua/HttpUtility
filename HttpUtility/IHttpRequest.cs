@@ -16,7 +16,7 @@ public interface IHttpRequest
     Task<string> PutAsync(string url, object input);
     Task<TResult> PutAsync<TResult>(string url, object input, Dictionary<string, string> urlParam = null);
     Task<string> PutAsync(string url, HttpContent content);
-    Task<string> DeleteAsync(string url);
+    Task<string> DeleteAsync(string url, Dictionary<string, string> urlParam = null);
 
     String BaseUrl { set; }
     String Token { set; get; }

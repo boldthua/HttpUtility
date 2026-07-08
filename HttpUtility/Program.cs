@@ -19,15 +19,15 @@ namespace HttpUtility
             //var print = JsonConvert.SerializeObject(articles);
             //Console.WriteLine(print);
 
-            Article article = new Article();
-            article.title = "1111";
-            article.id = 10;
-            article.userId = 1221;
-            article.body = "7788";
+            //Article article = new Article();
+            //article.title = "1111";
+            //article.id = 10;
+            //article.userId = 1221;
+            //article.body = "7788";
 
-            var articles = await request.Post(apiUrl, article);
-            var print = JsonConvert.SerializeObject(articles);
-            Console.WriteLine(print);
+            //var articles = await request.Post(apiUrl, article);
+            //var print = JsonConvert.SerializeObject(articles);
+            //Console.WriteLine(print);
         }
     }
 }
