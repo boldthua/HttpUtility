@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Net.WebRequestMethods;
@@ -12,7 +13,7 @@ namespace HttpUtility
     {
         public static readonly string putUrl = "https://jsonplaceholder.typicode.com/posts/1";
         public static readonly string apiUrl = "https://jsonplaceholder.typicode.com/posts";
-        public static HttpRequest request = new HttpRequest(apiUrl);
+        public static HttpRequest request = new HttpRequest(apiUrl, new HttpHandler());
         static async Task Main(string[] args)
         {
             //var articles = await request.Get<List<Article>>(apiUrl);
