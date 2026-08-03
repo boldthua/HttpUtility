@@ -82,6 +82,8 @@ namespace HttpUtility
                 if (message.IsSuccessStatusCode)
                 {
                     string content = await message.Content.ReadAsStringAsync();
+                    if (content == "")
+                        content = message.Headers.Location.ToString();
                     return JsonConvert.DeserializeObject<T>(content);
 
                 }
@@ -175,6 +177,33 @@ namespace HttpUtility
         {
             string result = await Post<string>(url, input);
             return result;
+        }
+
+        public async Task<string> PostAsync(string url, object input, Dictionary<string, string> urlParam)
+        {
+            string lastUrl = url;
+            if (urlParam != null)
+            {
+                lastUrl += '?';
+                foreach (var pairSet in urlParam)
+                {
+                    lastUrl = lastUrl + pairSet.Key + '=' + pairSet.Value + '&';
+                }
+                lastUrl = lastUrl.TrimEnd('&');
+            }
+            string postUrl = ConbineUrl(lastUrl);
+            try
+            {
+
+                StringContent stringContent = new StringContent(JsonConvert.SerializeObject(input));
+                HttpResponseMessage message = await client.PostAsync(postUrl, stringContent);
+
+                return message.Headers.Location.ToString();
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
         public async Task<TResult> PostAsync<TResult>(string url, object input, Dictionary<string, string> urlParam = null)

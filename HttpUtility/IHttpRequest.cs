@@ -8,6 +8,7 @@ public interface IHttpRequest
     Task<string> GetAsync(string url);
     Task<TResult> GetAsync<TResult>(string url, Dictionary<string, string> urlParam = null);
     Task<string> PostAsync(string url, object input);
+    Task<string> PostAsync(string url, object input, Dictionary<string, string> urlParam);
     Task<TResult> PostAsync<TResult>(string url, object input, Dictionary<string, string> urlParam = null);
     Task<TResult> PostAsync<TResult>(string url, MultipartFormDataContent input, Dictionary<string, string> urlParam = null);
 
