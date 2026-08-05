@@ -53,8 +53,8 @@
     <Compile Include="HttpHandler.cs" />
     <Compile Include="HttpRequest.cs" />
     <Compile Include="IHttpRequest.cs" />
-    <Compile Include="IInterceptor.cs" />
-    <Compile Include="Interceptor.cs" />
+    <Compile Include="IHttpInterceptor.cs" />
+    <Compile Include="InterceptionResult.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

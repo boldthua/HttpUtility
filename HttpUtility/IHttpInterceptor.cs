@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace HttpUtility
 {
-    internal interface IInterceptor
+    public interface IHttpInterceptor
     {
-        Task<Interceptor> HandleAsync(
-            HttpRequestMessage request, 
+        Task<InterceptionResult> HandleAsync(
+            HttpRequestMessage request,
             Func<HttpRequestMessage, CancellationToken, Task<HttpResponseMessage>> sendAsync
             );
     }

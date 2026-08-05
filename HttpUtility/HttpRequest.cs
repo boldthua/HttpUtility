@@ -18,7 +18,6 @@ namespace HttpUtility
 
         public string BaseUrl { get; set; }
         private string _token;
-        private HttpMessageHandler _handler;
         public String Token
         {
             get
@@ -31,11 +30,10 @@ namespace HttpUtility
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", value);
             }
         }
-        public HttpRequest(string baseUrl, HttpMessageHandler handler = null) 
-        { 
+        public HttpRequest(string baseUrl, IHttpInterceptor interceptor = null, bool isUseProxy = false)
+        {
             BaseUrl = baseUrl;
-            _handler = handler;
-            client = new HttpClient(handler);
+            client = new HttpClient(new HttpHandler(interceptor, isUseProxy));
         }
 
         public async Task<T> Get<T>(string url)
