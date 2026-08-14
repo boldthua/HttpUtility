@@ -17,9 +17,11 @@ namespace HttpUtility
             this.interceptor = interceptor;
             var handler = new HttpClientHandler();
             this.InnerHandler = handler;
-            handler.UseProxy = isUseProxy;
-            handler.Proxy = new WebProxy("http://127.0.0.1:8888");
-
+            if (isUseProxy)
+            {
+                handler.UseProxy = isUseProxy;
+                handler.Proxy = new WebProxy("http://127.0.0.1:8888");
+            }
         }
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
